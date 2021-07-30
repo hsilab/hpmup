@@ -1,0 +1,30 @@
+Goal M?ode_1_&_good_after
+.Reach the device parallel forward 
+.Goal Pick up the pin
+..Recall <gesture - close>
+..Store <mode - 1>
+..Also Look if the pin is located between the hook
+..Flexion to clamp the pin 
+..Verify if the hook is fully closed
+.Goal Move the arm
+..Move_MTM the arm from one bar to another bar
+..Also Look the hook if the hook is not moving
+.Goal Drop-off the pin to B
+..Goal Adjust the hook
+...Recall <mode - 1>
+...Grasp to change the mode from 1 to 2
+...Recall <gesture - rotation>
+...Flexion to make the hook perpendicular(or parallel) to the table 
+...Store <mode - 2>
+..Goal Drop-off the pin
+...Recall <mode - 2>
+...Grasp to change the mode from 2 to 1
+...Recall <gesture - open>
+...Extension to drop off the pin
+..Also Verify if pin is successfully moved
+..Move_MTM the arm to_the_original_position
+.Goal Adjust the hook 
+..Recall <mode - 1>
+..Grasp to change the model from 1 to 2
+...Flexion to make the hook perpendicular(or parallel) to the table 
+..Grasp to change the model from 2 to 1
