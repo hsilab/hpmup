@@ -1,0 +1,53 @@
+Goal: Turn the door handle down and back up
+
+"* Like sample codes, we should use ""dot"" as a way to do indentation to increase visibility of the code"
+
+.Attend the task
+
+.Initiate the task
+
+.Also: Look at the hook
+
+.Goal: Reach to the door handle with ideal hook status
+
+..Goal Adjust the hook
+
+...Turn_MTM to rotate the hook
+
+...Also Look at the hook
+
+...Verify the hook angle is good
+
+...Reach the arm to the pin
+
+...Verify if the hook direction is appropriate
+
+.Goal: Grasp the door handle
+
+.. Goal Adjust the prosthesis
+
+...Open_MTM to clamp the door handle
+
+...Verify if the hook is opened enough to grip the door handle
+
+...Grasp the door handle
+
+...Also Verify if the handle is be clamped tightly
+
+.Goal: Turn the door handle down
+
+..Turn_MTM the door handle down
+
+..Also Look if the handle is fully roated
+
+.Goal: Turn the door handle back up
+
+..Turn_MTM the door handle back up
+
+..Verify if the task is successfully finished
+
+.Goal: End the task
+
+..Open_MTM the hook to release the handle
+
+..Also Verify if the task is successfully finished

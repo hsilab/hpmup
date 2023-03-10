@@ -1,4 +1,6 @@
 Goal M?ode_1_&_good_after
+.Attend the task
+.Initiate the task
 .Reach the device parallel forward 
 .Goal Pick up the pin
 ..Recall <gesture - close>
@@ -28,3 +30,4 @@ Goal M?ode_1_&_good_after
 ..Grasp to change the model from 1 to 2
 ...Flexion to make the hook perpendicular(or parallel) to the table 
 ..Grasp to change the model from 2 to 1
+..Look if the pin is located between the hook

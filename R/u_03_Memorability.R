@@ -21,6 +21,17 @@ GetMemoryChunk <- function (chunk_Lifecyle, acc_Time_1) {
   MC_list <- list(chunk_Lifecyle, MC)
   return(MC_list)
 }
+# GetMemoryChunk <- function (chunk_Lifecyle, acc_Time_1) {
+#   MC <- 0
+#   # Fill out emputy end_Time if a chunk only has start_Time
+#   for (i in 1:nrow(chunk_Lifecyle)) {
+#     if (chunk_Lifecyle[i,1] != 0 && chunk_Lifecyle[i,3] == 0)
+#       chunk_Lifecyle[i,3] <- acc_Time_1
+#     MC <- MC + abs( chunk_Lifecyle[i,2] - chunk_Lifecyle[i,3] )
+#   }
+#   MC <- MC/acc_Time_1
+#   return(MC)
+# }
 
 #' MultipleChunks()
 #'
@@ -324,16 +335,14 @@ UpdateChunk <- function (candidate_chunk, oper_name, time_current, wm_Box, same_
   for (i in 1:nrow(wm_Box)) {
     # Update for the other chunks
     if ( (wm_Box$chunk_name[i] != candidate_chunk) && (wm_Box$chunk_name[i] != 0) && (time_current != wm_Box$pushed_time.Global.[i])) {
-      # wm_Box[i, 5] <- time_current - wm_Box[i, 4] - 50
-      wm_Box[i, 5] <- time_current - wm_Box[i, 4]
+      wm_Box[i, 5] <- time_current - wm_Box[i, 4] - 50
       wm_Box[i, 7] <- GetActivation(wm_Box[i, 3], wm_Box[i, 5], wm_Box[i, 6]) # activation update
       wm_Box[i, 8] <- GetProbRecall(wm_Box[i, 7]) # prob_recall update
     }
     # Rehearsal : Update for the same chunk except for the first push
     else if ( (wm_Box$chunk_name[i] == candidate_chunk) && (same_chunk_counter != 0) ) {
-      # wm_Box[i, 5] <- time_current - wm_Box[i, 4] - 50
-      wm_Box[i, 5] <- time_current - wm_Box[i, 4]
-      updated_rehearsal <- GetRehearsal(oper_name, candidate_chunk, wm_Box[i, 6], same_chunk_counter, candidate_chunk)
+      wm_Box[i, 5] <- time_current - wm_Box[i, 4] - 50
+      updated_rehearsal <- GetRehearsal(oper_name, candidate_chunk, wm_Box[i, 6], same_chunk_counter)
       wm_Box[i, 6] <- updated_rehearsal
       wm_Box[i, 7] <- GetActivation(wm_Box[i, 3], wm_Box[i, 5], updated_rehearsal) # activation update
       wm_Box[i, 8] <- GetProbRecall(wm_Box[i, 7]) # prob_recall update
@@ -341,6 +350,28 @@ UpdateChunk <- function (candidate_chunk, oper_name, time_current, wm_Box, same_
   }
   return(wm_Box)
 }
+# UpdateChunk <- function (candidate_chunk, oper_name, time_current, wm_Box, same_chunk_counter) {
+#
+#   for (i in 1:nrow(wm_Box)) {
+#     # Update for the other chunks
+#     if ( (wm_Box$chunk_name[i] != candidate_chunk) && (wm_Box$chunk_name[i] != 0) && (time_current != wm_Box$pushed_time.Global.[i])) {
+#       # wm_Box[i, 5] <- time_current - wm_Box[i, 4] - 50
+#       wm_Box[i, 5] <- time_current - wm_Box[i, 4]
+#       wm_Box[i, 7] <- GetActivation(wm_Box[i, 3], wm_Box[i, 5], wm_Box[i, 6]) # activation update
+#       wm_Box[i, 8] <- GetProbRecall(wm_Box[i, 7]) # prob_recall update
+#     }
+#     # Rehearsal : Update for the same chunk except for the first push
+#     else if ( (wm_Box$chunk_name[i] == candidate_chunk) && (same_chunk_counter != 0) ) {
+#       # wm_Box[i, 5] <- time_current - wm_Box[i, 4] - 50
+#       wm_Box[i, 5] <- time_current - wm_Box[i, 4]
+#       updated_rehearsal <- GetRehearsal(oper_name, candidate_chunk, wm_Box[i, 6], same_chunk_counter, candidate_chunk)
+#       wm_Box[i, 6] <- updated_rehearsal
+#       wm_Box[i, 7] <- GetActivation(wm_Box[i, 3], wm_Box[i, 5], updated_rehearsal) # activation update
+#       wm_Box[i, 8] <- GetProbRecall(wm_Box[i, 7]) # prob_recall update
+#     }
+#   }
+#   return(wm_Box)
+# }
 
 # Function: Activation =========================================================================================================================================
 #' GetActivation()
@@ -377,35 +408,35 @@ GetActivation <- function (stack_Depth, last_Time, rehearsals) {
 #' GetRehearsal(oper, chk_nam_list, current_rehearsal, same, chunk_Name)
 GetRehearsal <- function (oper, chk_nam_list, current_rehearsal, same, chunk_Name) {
 
-  # Expert - This logic is to identify chunk whether it is in LTM
-  if ( !is.na(chunk_Name) ) {
-    result_text <- c()
-    separation_space <- 1
-    word_start <- 1
-    word_end <- 0
-
-    char_pointer <- " "
-
-    for (i in 1:nchar(chunk_Name)) {
-      char_pointer <- substr(chunk_Name, i, i)
-      if (char_pointer == "<")
-        word_start <- word_start + 1
-      else if (char_pointer == " " || char_pointer == ">") {
-        word_end <- i - 1
-        result_text[separation_space] <- substr(chunk_Name, word_start, word_end)
-        separation_space <- separation_space + 1
-        word_start <- i + 1
-      }
-    }
-
-    temp_LTM <- GetLTM()
-    for (i in 1:length(result_text)) {
-      for (j in 1:length(temp_LTM)) {
-        if (result_text[i] == temp_LTM[j])
-          return (10)
-      }
-    }
-  }
+  # # Expert - This logic is to identify chunk whether it is in LTM
+  # if ( !is.na(chunk_Name) ) {
+  #   result_text <- c()
+  #   separation_space <- 1
+  #   word_start <- 1
+  #   word_end <- 0
+  #
+  #   char_pointer <- " "
+  #
+  #   for (i in 1:nchar(chunk_Name)) {
+  #     char_pointer <- substr(chunk_Name, i, i)
+  #     if (char_pointer == "<")
+  #       word_start <- word_start + 1
+  #     else if (char_pointer == " " || char_pointer == ">") {
+  #       word_end <- i - 1
+  #       result_text[separation_space] <- substr(chunk_Name, word_start, word_end)
+  #       separation_space <- separation_space + 1
+  #       word_start <- i + 1
+  #     }
+  #   }
+  #
+  #   temp_LTM <- GetLTM()
+  #   for (i in 1:length(result_text)) {
+  #     for (j in 1:length(temp_LTM)) {
+  #       if (result_text[i] == temp_LTM[j])
+  #         return (10)
+  #     }
+  #   }
+  # }
   # Novice - logic from Cogulator
   if ( (oper == "Recall" || oper == "Hear" || oper == "Say") && same > 0)
     return(current_rehearsal + 1)

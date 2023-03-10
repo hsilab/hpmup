@@ -12,15 +12,19 @@ NULL
 LassoMain <- function() {
 
   # Split - data.frame
-  t_index <- sample(1:nrow(norm_CRT), size=nrow(norm_CRT)*0.7)
-  dat_train <- norm_CRT[t_index, ]
-  dat_test <- norm_CRT[-t_index, ]
+  t_index <- sample(1:nrow(CRT_24), size=nrow(CRT_24)*0.8) # normalized data
+  # t_index <- sample(1:nrow(stan_CRT), size=nrow(stan_CRT)*0.92) # standardized data
+  dat_train <- CRT_24[t_index, ] # normalized data
+  dat_test <- CRT_24[-t_index, ] # normalized data
+  # dat_train <- stan_CRT[t_index, ] # standardized data
+  # dat_test <- stan_CRT[-t_index, ] # standardized data
 
   # Build the model
   lambda <- 10^seq(-3, 3, length = 100)
 
   lasso <- train(
-    factor(CW_G4) ~ PCPS + BR + perf_CRT + TCT_cycle + nC + nP + nM + TCT_CPM + ML
+    # factor(cw_group_4) ~ pcps + blink + perf + tct_cycle + nC + nP + nM + tct_CPM + mem_load # for FOUR groups
+    factor(cw_group_3_dev) ~ conf + pcps + blink + perf + tct_cycle + nC + nP + nM + tct_CPM + mem_load + training # for THREE groups
     , data = dat_train
     , method = "glmnet"
     , trControl = trainControl("cv", number = 10)
@@ -29,18 +33,29 @@ LassoMain <- function() {
 
   coef(lasso$finalModel, lasso$bestTune$lambda)
 
-  predictions <- lasso %>% predict(dat_test[,5:13])
+  predictions <- lasso %>% predict(dat_test[,4:12])
 
   # Accuracy
   matched_case <- 0
   for(i in 1:length(predictions)) {
-    if(predictions[i] == dat_test$CW_G4[i])
+    # if(predictions[i] == dat_test$cw_group_4[i]) # for FOUR groups
+    if(predictions[i] == dat_test$cw_group_3[i]) # for THREE groups
       matched_case <- matched_case + 1
   }
   acc_lasso <- matched_case/length(predictions)*100
   acc_lasso
 
-  # Equation
+  predictions
+  dat_test$cw_group_4
+
+  predictions[1]
+  dat_test$cw_group_3[1]
+
+  predictions[1] == dat_test$cw_group_3[1]
+
+  ML_outcome <- c()
+
+  # Equation (numbers below are from user input)
   lss_PCPS <- 0.73
   lss_BR <- 0.48
   lss_perf_CRT <- 0.47
@@ -53,64 +68,97 @@ LassoMain <- function() {
 
   lasso_coef <- coef(lasso$finalModel, lasso$bestTune$lambda)
 
-  for (i in 1:4) {
-    if (i == 1) { # high
-      exp_High <- exp(lasso_coef[[i]][1]
-                      + lasso_coef[[i]][2] * lss_PCPS
-                      + lasso_coef[[i]][3] * lss_BR
-                      + lasso_coef[[i]][4] * lss_perf_CRT
-                      + lasso_coef[[i]][5] * lss_TCT_cycle
-                      + lasso_coef[[i]][6] * lss_nC
-                      + lasso_coef[[i]][7] * lss_nP
-                      + lasso_coef[[i]][8] * lss_nM
-                      + lasso_coef[[i]][9] * lss_TCT_CPM
-                      + lasso_coef[[i]][10] * lss_ML)
-    } else if (i == 2 ) { # low
-      exp_Low <- exp(lasso_coef[[i]][1]
-                     + lasso_coef[[i]][2] * lss_PCPS
-                     + lasso_coef[[i]][3] * lss_BR
-                     + lasso_coef[[i]][4] * lss_perf_CRT
-                     + lasso_coef[[i]][5] * lss_TCT_cycle
-                     + lasso_coef[[i]][6] * lss_nC
-                     + lasso_coef[[i]][7] * lss_nP
-                     + lasso_coef[[i]][8] * lss_nM
-                     + lasso_coef[[i]][9] * lss_TCT_CPM
-                     + lasso_coef[[i]][10] * lss_ML)
-    } else if (i == 3 ) { # moderate
-      exp_Moderate <- exp(lasso_coef[[i]][1]
-                          + lasso_coef[[i]][2] * lss_PCPS
-                          + lasso_coef[[i]][3] * lss_BR
-                          + lasso_coef[[i]][4] * lss_perf_CRT
-                          + lasso_coef[[i]][5] * lss_TCT_cycle
-                          + lasso_coef[[i]][6] * lss_nC
-                          + lasso_coef[[i]][7] * lss_nP
-                          + lasso_coef[[i]][8] * lss_nM
-                          + lasso_coef[[i]][9] * lss_TCT_CPM
-                          + lasso_coef[[i]][10] * lss_ML)
-    } else if (i == 4 ) { # very low
-      exp_Very_low <- exp(lasso_coef[[i]][1]
-                          + lasso_coef[[i]][2] * lss_PCPS
-                          + lasso_coef[[i]][3] * lss_BR
-                          + lasso_coef[[i]][4] * lss_perf_CRT
-                          + lasso_coef[[i]][5] * lss_TCT_cycle
-                          + lasso_coef[[i]][6] * lss_nC
-                          + lasso_coef[[i]][7] * lss_nP
-                          + lasso_coef[[i]][8] * lss_nM
-                          + lasso_coef[[i]][9] * lss_TCT_CPM
-                          + lasso_coef[[i]][10] * lss_ML)
+  if (cw_group == 4) {
+    for (i in 1:4) {
+      if (i == 1) { # high
+        exp_High <- exp(lasso_coef[[i]][1]
+                        + lasso_coef[[i]][2] * lss_PCPS
+                        + lasso_coef[[i]][3] * lss_BR
+                        + lasso_coef[[i]][4] * lss_perf_CRT
+                        + lasso_coef[[i]][5] * lss_TCT_cycle
+                        + lasso_coef[[i]][6] * lss_nC
+                        + lasso_coef[[i]][7] * lss_nP
+                        + lasso_coef[[i]][8] * lss_nM
+                        + lasso_coef[[i]][9] * lss_TCT_CPM
+                        + lasso_coef[[i]][10] * lss_ML)
+      } else if (i == 2 ) { # low
+        exp_Low <- exp(lasso_coef[[i]][1]
+                       + lasso_coef[[i]][2] * lss_PCPS
+                       + lasso_coef[[i]][3] * lss_BR
+                       + lasso_coef[[i]][4] * lss_perf_CRT
+                       + lasso_coef[[i]][5] * lss_TCT_cycle
+                       + lasso_coef[[i]][6] * lss_nC
+                       + lasso_coef[[i]][7] * lss_nP
+                       + lasso_coef[[i]][8] * lss_nM
+                       + lasso_coef[[i]][9] * lss_TCT_CPM
+                       + lasso_coef[[i]][10] * lss_ML)
+      } else if (i == 3 ) { # moderate
+        exp_Moderate <- exp(lasso_coef[[i]][1]
+                            + lasso_coef[[i]][2] * lss_PCPS
+                            + lasso_coef[[i]][3] * lss_BR
+                            + lasso_coef[[i]][4] * lss_perf_CRT
+                            + lasso_coef[[i]][5] * lss_TCT_cycle
+                            + lasso_coef[[i]][6] * lss_nC
+                            + lasso_coef[[i]][7] * lss_nP
+                            + lasso_coef[[i]][8] * lss_nM
+                            + lasso_coef[[i]][9] * lss_TCT_CPM
+                            + lasso_coef[[i]][10] * lss_ML)
+      } else if (i == 4 ) { # very low
+        exp_Very_low <- 1
+      }
     }
+  } else if (cw_group == 3) {
+      # FOR THREE GROUPS
+      for (i in 1:4) {
+        if (i == 1) { # high
+          exp_High <- exp(lasso_coef[[i]][1]
+                          + lasso_coef[[i]][2] * lss_PCPS
+                          + lasso_coef[[i]][3] * lss_BR
+                          + lasso_coef[[i]][4] * lss_perf_CRT
+                          + lasso_coef[[i]][5] * lss_TCT_cycle
+                          + lasso_coef[[i]][6] * lss_nC
+                          + lasso_coef[[i]][7] * lss_nP
+                          + lasso_coef[[i]][8] * lss_nM
+                          + lasso_coef[[i]][9] * lss_TCT_CPM
+                          + lasso_coef[[i]][10] * lss_ML)
+        } else if (i == 2 ) { # low
+          exp_Low <- exp(lasso_coef[[i]][1]
+                         + lasso_coef[[i]][2] * lss_PCPS
+                         + lasso_coef[[i]][3] * lss_BR
+                         + lasso_coef[[i]][4] * lss_perf_CRT
+                         + lasso_coef[[i]][5] * lss_TCT_cycle
+                         + lasso_coef[[i]][6] * lss_nC
+                         + lasso_coef[[i]][7] * lss_nP
+                         + lasso_coef[[i]][8] * lss_nM
+                         + lasso_coef[[i]][9] * lss_TCT_CPM
+                         + lasso_coef[[i]][10] * lss_ML)
+        } else if (i == 3 ) { # moderate
+          exp_Moderate <- 1
+        }
+      }
   }
 
-  pr_High <- exp_High/(1 + exp_Low + exp_Moderate + exp_Very_low)
-  pr_Low <- exp_Low/(1 + exp_Low + exp_Moderate + exp_Very_low)
-  pr_Moderate <- exp_Moderate/(1 + exp_Low + exp_Moderate + exp_Very_low)
-  pr_Very_low <- exp_Very_low/(1 + exp_Low + exp_Moderate + exp_Very_low)
+
+  if (cw_group == 4) {
+    pr_High <- exp_High/(1 + exp_High + exp_Low + exp_Moderate)
+    pr_Low <- exp_Low/(1 + exp_High + exp_Low + exp_Moderate)
+    pr_Moderate <- exp_Moderate/(1 + exp_High + exp_Low + exp_Moderate)
+    pr_Very_low <- exp_Very_low/(1 + exp_High + exp_Low + exp_Moderate)
+  } else if (cw_group == 3) {
+    pr_High <- exp_High/(1 + exp_High + exp_Low)
+    pr_Low <- exp_Low/(1 + exp_High + exp_Low)
+    pr_Moderate <- exp_Moderate/(1 + exp_High + exp_Low)
+  }
 
   lasso_summ <- lasso_Summary()
   lasso_summ
-  lasso_Prob <- lasso_prob(pr_High, pr_Low, pr_Moderate, pr_Very_low, lasso_summ)
+  if (cw_group == 4) {
+    lasso_Prob <- lasso_prob(pr_High, pr_Low, pr_Moderate, pr_Very_low, lasso_summ)
+  } else if (cw_group == 3) {
+    lasso_Prob <- lasso_prob(pr_High, pr_Low, pr_Moderate, 0, lasso_summ)
+  }
   lasso_Prob
-  lasso_Pred <- lasso_pred_Result(lasso_Prob)
+  lasso_Pred <- lasso_pred_Result(lasso_Prob, ML_outcome, round(acc_lasso, 2))
   lasso_Pred
 
   return(lasso_Pred)
@@ -131,13 +179,23 @@ lasso_Summary <- function() {
   Low <- c()
   Very_low <- c()
 
-  lss_summ <- data.frame(High, Moderate, Low, Very_low)
-  lss_summ <- rbind(lss_summ, c(0,0,0, 0))
+  if (cw_group == 4) {
+    lss_summ <- data.frame(High, Moderate, Low, Very_low)
+    lss_summ <- rbind(lss_summ, c(0,0,0,0))
 
-  colnames(lss_summ)[1]<-"Pr(High)"
-  colnames(lss_summ)[2]<-"Pr(Moderate)"
-  colnames(lss_summ)[3]<-"Pr(Low)"
-  colnames(lss_summ)[4]<-"Pr(Very Low)"
+    colnames(lss_summ)[1]<-"Pr(High)"
+    colnames(lss_summ)[2]<-"Pr(Moderate)"
+    colnames(lss_summ)[3]<-"Pr(Low)"
+    colnames(lss_summ)[4]<-"Pr(Very Low)"
+  } else if (cw_group == 3) {
+    lss_summ <- data.frame(High, Moderate, Low)
+    lss_summ <- rbind(lss_summ, c(0,0,0))
+
+    colnames(lss_summ)[1]<-"Pr(High)"
+    colnames(lss_summ)[2]<-"Pr(Moderate)"
+    colnames(lss_summ)[3]<-"Pr(Low)"
+  }
+
   return(lss_summ)
 }
 
@@ -150,16 +208,22 @@ lasso_Summary <- function() {
 #' @param pr_Very_low Probability of "Very low"
 #' @param lss_summ Summary table
 #'
-#' @return Prabability table for each class
+#' @return Probability table for each class
 #' @export
 #'
 #' @examples
 #' lasso_prob(pr_High, pr_Low, pr_Moderate, pr_Very_low, lss_summ)
 lasso_prob <- function (pr_High, pr_Low, pr_Moderate, pr_Very_low, lss_summ) {
-  lss_summ[1]<-pr_High
-  lss_summ[2]<-pr_Moderate
-  lss_summ[3]<-pr_Low
-  lss_summ[4]<-pr_Very_low
+  if (cw_group == 4) {
+    lss_summ[1]<-pr_High
+    lss_summ[2]<-pr_Moderate
+    lss_summ[3]<-pr_Low
+    lss_summ[4]<-pr_Very_low
+  } else if (cw_group == 3) {
+    lss_summ[1]<-pr_High
+    lss_summ[2]<-pr_Moderate
+    lss_summ[3]<-pr_Low
+  }
   return(lss_summ)
 }
 
@@ -173,9 +237,11 @@ lasso_prob <- function (pr_High, pr_Low, pr_Moderate, pr_Very_low, lss_summ) {
 #'
 #' @examples
 #' lasso_pred_Result(lasso_prob_table)
-lasso_pred_Result <- function (lasso_prob_table) {
-  for (i in 1:4) {
-    if (max(lasso_prob_table) == lasso_prob_table[i])
-      return(colnames(lasso_prob_table[i]))
+lasso_pred_Result <- function (lasso_prob_table, ML_outcome, acc_lasso) {
+  for (i in 1:cw_group) {
+    if (max(lasso_prob_table) == lasso_prob_table[i]) {
+      ML_outcome <- c(acc_lasso, colnames(lasso_prob_table[i]))
+    }
   }
+  return(ML_outcome)
 }

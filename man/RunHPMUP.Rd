@@ -4,7 +4,7 @@
 \alias{RunHPMUP}
 \title{Title HPM-UP main function}
 \usage{
-RunHPMUP(scenario)
+RunHPMUP(scenario, time_library)
 }
 \arguments{
 \item{scenario}{: is a scenario file (csv format)}

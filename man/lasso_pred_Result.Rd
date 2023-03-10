@@ -4,7 +4,7 @@
 \alias{lasso_pred_Result}
 \title{lasso_pred_Result()}
 \usage{
-lasso_pred_Result(lasso_prob_table)
+lasso_pred_Result(lasso_prob_table, ML_outcome, acc_lasso)
 }
 \arguments{
 \item{lasso_prob_table}{Summary table}

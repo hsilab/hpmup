@@ -5,17 +5,17 @@ Goal: Move a pin from one bar(A) to another bar(B)
 .Goal: Reach to a pin at bar A with ideal hook status
 ..Goal Adjust the hook
 ...Reach the arm to the pin
-…Open_MTM
-..Also: Verify if the hook direction is appropriate
+...Open_MTM
+..Verify if the hook direction is appropriate
 .Goal: Pick up the pin
 ..Grasp the hook to pick up the pin
-..Verify if the pin is fully clamped by the hook
+..if the pin is fully clamped by the hook
 .Goal: Move the arm
 ..Move_MTM from A to B 
 ..Also: Turn_MTM hand to make the hook perpendicular(or parallel) to the table
 .Goal: Drop off the pin to B
 ..Look if the bar is positioned between the gap of the pin
-..Also: Verify if the bar is positioned between the gap of the pin
+..Verify if the bar is positioned between the gap of the pin
 ..Open_MTM the hook to drop off the pin
 ..Also: Verify if the pin moved successfully
 ..Move_MTM the arm to_the_original_position

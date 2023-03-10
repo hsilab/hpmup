@@ -1,3 +1,31 @@
+#' CalcError
+#'
+#' @param L
+#'
+#' @return
+#' @export
+#'
+#' @examples
+CalcError <- function (L) {
+  norm_L <- 1-L/20 # this '20' is a very assumption that the number of maximum training trials is 20
+  ErrorRate <- max( (exp(norm_L)-exp(1))/(1-exp(1)), 0)
+
+  return(ErrorRate)
+}
+
+
+###########################################################################################
+###########################################################################################
+###########################################################################################
+###########################################################################################
+########################      #############################################################
+######################## OLD  #############################################################
+########################      #############################################################
+###########################################################################################
+###########################################################################################
+###########################################################################################
+
+
 #' GetErrSimple()
 #'
 #' @description Return error using distribution and probability
@@ -12,25 +40,25 @@ GetErrSimple <- function(oper_name) {
 
   # error information on each type of configuration and gesture
   if (curr_Mode == "DC") {
-    err_prob_Flexion <- 0.30
-    err_prob_Extension <- 0.25
-    err_prob_Power_grip <- 0.15
+    err_prob_Flexion <- 0.45
+    err_prob_Extension <- 0.45
+    err_prob_Power_grip <- 0.35
 
     err_dura_Flexion <- rnorm(n=1, mean=750, sd=250)
     err_dura_Extension <- rnorm(n=1, mean=650, sd=250)
     err_dura_Power_grip <- rnorm(n=1, mean=550, sd=250)
   } else if (curr_Mode == "PR") {
-    err_prob_Sup_Pro_PR <- 0.2
-    err_prob_Open_PR <- 0.25
-    err_prob_Close_PR <- 0.15
+    err_prob_Sup_Pro_PR <- 0.35
+    err_prob_Open_PR <- 0.45
+    err_prob_Close_PR <- 0.5
 
     err_dura_Sup_Pro_PR <- rnorm(n=1, mean=650, sd=250)
     err_dura_Open_PR <- rnorm(n=1, mean=750, sd=150)
     err_dura_Close_PR <- rnorm(n=1, mean=800, sd=150)
   } else if (curr_Mode == "CC") {
     err_prob_Sup_Pro_CC <- 0.55
-    err_prob_Open_CC <- 0.6
-    err_prob_Close_CC <- 0.5
+    err_prob_Open_CC <- 0.45
+    err_prob_Close_CC <- 0.55
 
     err_dura_Sup_Pro_CC <- rnorm(n=1, mean=950, sd=100)
     err_dura_Open_CC <- rnorm(n=1, mean=950, sd=150)

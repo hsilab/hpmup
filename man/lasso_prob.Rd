@@ -18,7 +18,7 @@ lasso_prob(pr_High, pr_Low, pr_Moderate, pr_Very_low, lss_summ)
 \item{lss_summ}{Summary table}
 }
 \value{
-Prabability table for each class
+Probability table for each class
 }
 \description{
 Calculate the probability of each class

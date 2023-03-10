@@ -1,0 +1,59 @@
+Goal: Turn the door handle down and back up
+
+.Attend the task
+
+.Initiate the task
+
+.Also: Look at the hook
+
+.Goal: Reach out to the door handle
+
+..Reach the device parallel forward
+
+..Also Verify if the hook is fully opened
+
+.Goal: Turn the door handle down
+
+..Flexion to clamp the door handle
+
+..Also Verify if the hook is fully closed
+
+..Recall <mode - 1>
+
+..Store <mode - 1>
+
+..Grasp to do mode change DC 1->2
+
+..Recall <gesture - Flexion>
+
+..Store <gesture - Flexion>
+
+..Flexion to rotate the door handle down
+
+..Verify if the hook is fully turned
+
+.Goal: Turn the door handle back up
+
+..Recall <gesture - Extension>
+
+..Store <gesture - Extension>
+
+..Extension to rotate to door handle back up
+
+..Also Look if the hook is fully rotated
+
+.Goal: End the task
+
+..Recall <mode - 2>
+
+..Store <model - 2>
+
+..Grasp to do mode change DC 2->1
+
+..Recall <gesture - Extension>
+
+..Store <gesture - Extension>
+
+..Extension to release the door handle
+
+..Also Verify if the hook is fully opened
