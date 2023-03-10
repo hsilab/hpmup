@@ -21,7 +21,7 @@ import pandas as pd
 # loaded_model = pickle.load(open('D:/JP_project_test/hpmpd_v1.1/inst/python/nb_5_cluster_2_RFE_13_3320592.sav', 'rb'))       # row id 131  this path is for independent testing: 0.778
 # loaded_model = pickle.load(open('D:/JP_project_test/hpmpd_v1.1/inst/python/nb_2_cluster_2_FFS_5_2831635.sav', 'rb'))       # row id 312   this path is for independent testing: 0.8148 - this was 60%
 # loaded_model = pickle.load(open('D:/JP_project_test/hpmpd_v1.1/inst/python/nb_1_cluster_2_RFE_9_4836313.sav', 'rb'))        # row id 9  this path is for independent testing: 0.7778
-loaded_model = pickle.load(open('D:/JP_project_test/hpmpd_v1.1/inst/python/nb_0_cluster_2_K-Best_4_9156777.sav', 'rb'))       # row id 17  this path is for independent testing: 0.8889
+loaded_model = pickle.load(open('D:/JP_project_test/hpmup/inst/python/nb_0_cluster_2_K-Best_4_9156777.sav', 'rb'))       # row id 17  this path is for independent testing: 0.8889
 
 # RF
 # loaded_model = pickle.load(open('D:/JP_project_test/hpmpd_v1.1/inst/python/rf_14_cluster_2_FFS_1_4274905.sav', 'rb'))  # row 27
