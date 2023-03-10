@@ -1,6 +1,6 @@
-# ncpm_v1.0
+# HPM-UP_v1.0
 
-How to install the N-CPM package?
+How to install the HPM-UP package?
 
 1. Run Rstudio as an administrator
 
@@ -8,7 +8,7 @@ How to install the N-CPM package?
 install.packages("devtools")
 
 3. Run the code below:
-devtools::install_github("jpark-tamu/ncpm_v1.0")
+devtools::install_github("hsilab/hpmup")
 
 4. If Rstudio generates an error below,
 
@@ -20,8 +20,8 @@ Then, you need to remove the package and install a latest version with the code 
 remove.packages("package name")
 install.packages("package name")
 
-5. Once you successfully run devtools::install_github("jpark-tamu/ncpm_v1.0"), then, the N-CPM package will be installed.
+5. Once you successfully run devtools::install_github("hsilab/hpmup"), then, the HPM-UP package will be installed.
 
-6. Finally, you can run N-CPM with:
-library(ncpm)
-NCPMGUI()
+6. Finally, you can run HPM-UP with:
+library(hpmup)
+HPMPD()
